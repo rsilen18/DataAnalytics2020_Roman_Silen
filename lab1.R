@@ -76,9 +76,26 @@ labels(b, "EPI", "DALY", "WATER_H")
 boxplot(EPI,data1$ENVHEALTH,data1$ECOSYSTEM,DALY,data1$AIR_H,WATER_H,data1$AIR_E,data1$WATER_E, data1$BIODIVERSITY)
 
 # Exercise 2 - filtering populations
-EPILand<-data1$EPI[!Landlock]
+install.packages("dplyr")
+library(dplyr)
+EPILand<-filter(data1, Landlock == 0)
+EPILand<-EPILand$EPI
+ELand<- EPILand[!is.na(EPILand)]
+hist(ELand)
 
 # generate your own data points
 x <- seq(30,95,1)  # like linspace in MATLAB
 qqplot(qt(ppoints(250), df=5),x,xlab="Q-Q plot for t dsn")
 qqline(x)
+
+# conditional coloring on histogram
+install.packages("ggplot2")
+install.packages("magrittr")
+library(ggplot2)
+data("diamonds")
+ggplot(data=diamonds) + geom_histogram(mapping=aes(x=carat), binwidth = 0.5)
+ggplot(diamonds, aes(x=cut)) + geom_bar()
+ggplot(diamonds) + geom_histogram(aes(x=carat), col=ifelse(diamonds$carat<1,'red','green'))
+# diamonds$carat_freq <- diamonds$carat%%1 == 0
+diamonds$carat_freq <- diamonds$carat < 2.5
+ggplot(diamonds, aes(x=carat, fill=carat_freq)) + geom_histogram(binwidth=0.05)
